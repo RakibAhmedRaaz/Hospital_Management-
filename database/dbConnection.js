@@ -12,3 +12,23 @@ export const dbConnection = () => {
       console.log("Some error occured while connecting to database:", err);
     });
 };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/v1/user/patient/me",
+          {
+            withCredentials: true,
+          }
+        );
+        setIsAuthenticated(true);
+        setUser(response.data.user);
+      } catch (error) {
+        setIsAuthenticated(false);
+        setUser({});
+      }
+    };
+    fetchUser();
+  }, [isAuthenticated]);
+
