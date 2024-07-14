@@ -37,19 +37,19 @@ const Sidebar = () => {
     setShow(!show);
   };
   const gotoDoctorsPage = () => {
-    navigateTo("/doctors");
+    navigateTo("/doctorshsdhs");
     setShow(!show);
   };
   const gotoMessagesPage = () => {
-    navigateTo("/messages");
+    navigateTo("/messagesjhbshbja");
     setShow(!show);
   };
   const gotoAddNewDoctor = () => {
-    navigateTo("/doctor/addnew");
+    navigateTo("/doctor/addnew"doctord);
     setShow(!show);
   };
   const gotoAddNewAdmin = () => {
-    navigateTo("/admin/addnew");
+    navigateTo("/admin/addnecvdffgbgw");
     setShow(!show);
   };
 
@@ -59,16 +59,39 @@ const Sidebar = () => {
         style={!isAuthenticated ? { display: "none" } : { display: "flex" }}
         className={show ? "show sidebar" : "sidebar"}
       >
-        <div className="links">
-          <TiHome onClick={gotoHomePage} />
-          <FaUserDoctor onClick={gotoDoctorsPage} />
-          <MdAddModerator onClick={gotoAddNewAdmin} />
-          <IoPersonAddSharp onClick={gotoAddNewDoctor} />
-          <AiFillMessage onClick={gotoMessagesPage} />
-          <RiLogoutBoxFill onClick={handleLogout} />
-        </div>
-      </nav>
-      <div
+       export const errorMiddleware = (err, req, res, next) => {
+  err.message = err.message || "Internal Server Error";
+  err.statusCode = err.statusCode || 500;
+
+  if (err.code === 11000) {
+    const message = `Duplicate ${Object.keys(err.keyValue)} Entered`,
+      err = new ErrorHandler(message, 400);
+  }
+  if (err.name === "JsonWebTokenError") {
+    const message = `Json Web Token is invalid, Try again!`;
+    err = new ErrorHandler(message, 400);
+  }
+  if (err.name === "TokenExpiredError") {
+    const message = `Json Web Token is expired, Try again!`;
+    err = new ErrorHandler(message, 400);
+  }
+  if (err.name === "CastError") {
+    const message = `Invalid ${err.path}`,
+      err = new ErrorHandler(message, 400);
+  }
+
+  const errorMessage = err.errors
+    ? Object.values(err.errors)
+        .map((error) => error.message)
+        .join(" ")
+    : err.message;
+
+  return res.status(err.statusCode).json({
+    success: false,
+    // message: err.message,
+    message: errorMessage,
+  });
+};
         className="wrapper"
         style={!isAuthenticated ? { display: "none" } : { display: "flex" }}
       >

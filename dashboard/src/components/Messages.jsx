@@ -25,7 +25,60 @@ const Messages = () => {
   if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
   }
+onst Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
+  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+
+  const navigateTo = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await axios
+        .post(
+          "http://localhost:4000/api/v1/user/login",
+          { email, password, confirmPassword, role: "Admin" },
+          {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+        .then((res) => {
+          toast.success(res.data.message);
+          setIsAuthenticated(true);
+          navigateTo("/");
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+        });
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  if (isAuthenticated) {
+    return <Navigate to={"/"} />;
+  }
+const Messages = () => {
+  const [messages, setMessages] = useState([]);
+  const { isAuthenticated } = useContext(Context);
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:4000/api/v1/message/getall",
+          { withCredentials: true }
+        );
+        setMessages(data.messages);
+      } catch (error) {
+        console.log(error.response.data.message);
+      }
+    };
+    fetchMessages();
+  }, []);
   return (
     <section className="page messages">
       <h1>MESSAGE</h1>
