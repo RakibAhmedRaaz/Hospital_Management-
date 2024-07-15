@@ -36,6 +36,20 @@ const App = () => {
     fetchUser();
   }, [isAuthenticated]);
 
+
+  const AppWrapper = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [admin, setAdmin] = useState({});
+
+  return (
+    <Context.Provider
+      value={{ isAuthenticated, setIsAuthenticated, admin, setAdmin }}
+    >
+      <App />
+    </Context.Provider>
+  );
+};
+
   return (
     <Router>
       <Sidebar />
